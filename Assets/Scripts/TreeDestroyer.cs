@@ -14,9 +14,5 @@ public class TreeDestroyer : MonoBehaviour, IDamageable
         {
             Destroy(gameObject);
         }
-
-
     }
-
-
 }
