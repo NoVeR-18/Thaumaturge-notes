@@ -3,10 +3,13 @@ using UnityEngine;
 
 public interface IInventoryItemInfo
 {
-    string id { get; }
+    InventoryItemsTypes id { get; }
     string title { get; }
     string description { get; }
+    int amount { get; set; }
     int maxItemsInInventorySlot { get; }
-    Sprite spriteIcon { get; }
+    GameObject gameObgect { get; }
+
+    IInventoryItemInfo Clone();
 }
 

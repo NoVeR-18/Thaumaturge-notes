@@ -1,16 +1,14 @@
-﻿using System;
-
-public interface IInventorySlot
+﻿public interface IInventorySlot
 {
     bool isFull { get; }
     bool isEmpty { get; }
 
-    IInventoryItem item { get; }
-    Type itemType { get; }
+    public IInventoryItemInfo item { get; }
+    InventoryItemsTypes itemType { get; }
     int amount { get; }
     int capacity { get; }
 
-    void SetItem(IInventoryItem item);
+    void SetItem(IInventoryItemInfo item);
     void Clear();
 
 }
