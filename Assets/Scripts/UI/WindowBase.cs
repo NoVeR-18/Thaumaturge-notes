@@ -1,0 +1,18 @@
+﻿using UnityEngine;
+
+namespace Assets.Scripts.UI
+{
+    public class WindowBase : MonoBehaviour
+    {
+        public void CloseTab()
+        {
+            var parrent = GetComponent<Transform>();
+            parrent.gameObject.SetActive(false);
+        }
+        public void OpenTab()
+        {
+            var parrent = GetComponent<Transform>();
+            parrent.gameObject.SetActive(true);
+        }
+    }
+}
