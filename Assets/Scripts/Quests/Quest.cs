@@ -2,26 +2,29 @@ using System;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "QuestData", menuName = "Quest")]
-public class Quest : ScriptableObject
+namespace QuestPack
 {
-    public Action PointsChanged;
-    public QuestType QuestType;
-    public QuestAwardType QuestAwardType;
-    public string QuestInfo;
-    public int Award;
-    public int RemainToAwards;
-    public int PointsToAwards;
-    public bool isActive = true;
-
-
-    public void AddPoints(int count)
+    [CreateAssetMenu(fileName = "QuestData", menuName = "Quest")]
+    public class Quest : ScriptableObject
     {
-        RemainToAwards += count;
-        if (RemainToAwards >= PointsToAwards)
+        public Action PointsChanged;
+        public QuestType QuestType;
+        public QuestAwardType QuestAwardType;
+        public string QuestInfo;
+        public int Award;
+        public int RemainToAwards;
+        public int PointsToAwards;
+        public bool isActive = true;
+
+
+        public void AddPoints(int count)
         {
-            isActive = false;
+            RemainToAwards += count;
+            if (RemainToAwards >= PointsToAwards)
+            {
+                isActive = false;
+            }
+            PointsChanged.Invoke();
         }
-        PointsChanged.Invoke();
     }
 }

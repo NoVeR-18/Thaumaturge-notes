@@ -1,31 +1,69 @@
-public class InventorySlot : IInventorySlot
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InventorySlot : MonoBehaviour
 {
-    //private int _amount;
+    public Image icon;
+    public Button removeButton;
+    public TextMeshProUGUI stackText;
 
-    public bool isFull => amount == capacity;
-
-    public bool isEmpty => item == null;
-
-    public IInventoryItemInfo item { get; private set; }
-
-    public InventoryItemsTypes itemType => item.id;
-
-    public int amount => isEmpty ? 0 : item.amount;
-
-    public int capacity { get; private set; }
-
-    public void SetItem(IInventoryItemInfo item)
+    private Item item;
+    private int quantity;
+    private void Start()
     {
-        if (!isEmpty)
-            return;
-        this.item = item;
-        this.capacity = item.maxItemsInInventorySlot;
+        removeButton.onClick.AddListener(() => { RemoveItemFromInventory(); });
+
+
+    }
+    public void AddItem(Item newItem, int count)
+    {
+        item = newItem;
+        quantity = count;
+
+        icon.sprite = item.icon;
+        icon.enabled = true;
+        removeButton.interactable = true;
+        UpdateStackText();
     }
 
-    public void Clear()
+    public void ClearSlot()
     {
-        if (isEmpty) return;
-        item.amount = 0;
         item = null;
+        quantity = 0;
+
+        icon.sprite = null;
+        icon.enabled = false;
+        removeButton.interactable = false;
+        stackText.text = "";
+    }
+
+    public void RemoveItemFromInventory()
+    {
+        if (item != null && quantity > 1)
+        {
+            quantity--;
+            Inventory.instance.DropItem(item);
+            UpdateStackText();
+        }
+        else
+        {
+            Inventory.instance.DropItem(item);
+            ClearSlot();
+        }
+    }
+
+    public void UseItem()
+    {
+        if (item != null)
+        {
+            item.Use();
+            RemoveItemFromInventory();
+        }
+    }
+
+    private void UpdateStackText()
+    {
+        stackText.text = quantity > 1 ? quantity.ToString() : "";
     }
 }

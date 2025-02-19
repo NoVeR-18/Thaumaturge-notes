@@ -1,3 +1,4 @@
+using QuestPack;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -40,7 +41,6 @@ namespace Assets.Scripts.UI
             _refreshButton.onClick.AddListener(ResetQuests);
             _backButton.onClick.AddListener(CloseTab);
         }
-
         private void InitializedQuests()
         {
             questInfoViews = new List<QuestInfoView>();

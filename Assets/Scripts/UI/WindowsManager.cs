@@ -7,6 +7,7 @@ public class WindowsManager : MonoBehaviour
 
     [SerializeField] private InventoryWindow _inventoryPopup;
     [SerializeField] private QuestWindow _questsWindow;
+    [SerializeField] private ThaumaturgiconWindow _thaumaturgiconWindow;
 
     public void Update()
     {
@@ -23,6 +24,13 @@ public class WindowsManager : MonoBehaviour
                 _inventoryPopup.CloseTab();
             else
                 _inventoryPopup.OpenTab();
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            if (_thaumaturgiconWindow.gameObject.activeSelf)
+                _thaumaturgiconWindow.CloseTab();
+            else
+                _thaumaturgiconWindow.OpenTab();
         }
     }
 }
