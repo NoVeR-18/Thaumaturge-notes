@@ -92,7 +92,7 @@ public class KeepFrameFeature : ScriptableRendererFeature
 
     private CopyFramePass m_CopyFrame;
     private DrawOldFramePass m_DrawOldFame;
-
+    [Obsolete]
     private RenderTargetHandle m_OldFrameHandle;
 
     public Settings settings = new Settings();
