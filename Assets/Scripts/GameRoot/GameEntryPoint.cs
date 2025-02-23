@@ -9,7 +9,7 @@ namespace Assets.Scripts.GameRoot
     {
         private static GameEntryPoint _instance;
         private Coroutines _coroutines;
-        private UIRootView _uiRoot;
+        //private UIRootView _uiRoot;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 
@@ -27,9 +27,9 @@ namespace Assets.Scripts.GameRoot
             _coroutines = new GameObject("[COROUTINS]").AddComponent<Coroutines>();
             Object.DontDestroyOnLoad(_coroutines);
 
-            var prefabUIRoot = Resources.Load<UIRootView>("UIRoot");
-            _uiRoot = Object.Instantiate(prefabUIRoot);
-            Object.DontDestroyOnLoad(_uiRoot.gameObject);
+            //var prefabUIRoot = Resources.Load<UIRootView>("UIRoot");
+            //_uiRoot = Object.Find<UIRootView>();
+            //Object.DontDestroyOnLoad(_uiRoot.gameObject);
             ///Upload gameSettigs (future)
         }
 
@@ -52,12 +52,12 @@ namespace Assets.Scripts.GameRoot
         }
         private IEnumerator LoadAndStartGamePlay()
         {
-            _uiRoot.ShowLoadingScreen();
+            //_uiRoot.ShowLoadingScreen();
 
             yield return LoadScene(Scenes.STARTMENU);
             yield return LoadScene(Scenes.GAMEPLAY);
 
-            _uiRoot.HideLoadingScreen();
+            //_uiRoot.HideLoadingScreen();
         }
 
         private IEnumerator LoadScene(string sceneName)

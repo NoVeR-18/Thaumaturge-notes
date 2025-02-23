@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,8 +20,9 @@ public class Inventory : MonoBehaviour
     public static Inventory instance;
     public int space = 10; // Количество слотов
     public List<InventoryItem> items = new List<InventoryItem>();
-    public InventoryWindow inventoryUI;
     public Transform dropPosition; // Точка выброса предмета
+
+    public Action InventoryUpdated;
 
     void Awake()
     {
@@ -60,7 +62,7 @@ public class Inventory : MonoBehaviour
         {
             Debug.Log("Инвентарь переполнен!");
         }
-
+        InventoryUpdated?.Invoke();
         SaveInventory();
     }
 
@@ -91,7 +93,7 @@ public class Inventory : MonoBehaviour
     }
     public void SaveInventory()
     {
-        PlayerPrefs.SetString("Inventory", JsonUtility.ToJson(this));
+        PlayerPrefs.SetString("Inventory", JsonUtility.ToJson(items));
         PlayerPrefs.Save();
     }
 
@@ -99,7 +101,7 @@ public class Inventory : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("Inventory"))
         {
-            JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString("Inventory"), this);
+            items = JsonUtility.FromJson<List<InventoryItem>>(PlayerPrefs.GetString("Inventory"));
         }
     }
 }

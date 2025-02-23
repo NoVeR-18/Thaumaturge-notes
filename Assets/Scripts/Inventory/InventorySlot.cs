@@ -6,6 +6,7 @@ public class InventorySlot : MonoBehaviour
 {
     public Image icon;
     public Button removeButton;
+    public Button iconButton;
     public TextMeshProUGUI stackText;
 
     private Item item;
@@ -13,8 +14,7 @@ public class InventorySlot : MonoBehaviour
     private void Start()
     {
         removeButton.onClick.AddListener(() => { RemoveItemFromInventory(); });
-
-
+        iconButton.onClick.AddListener(MoveToHotbar);
     }
     public void AddItem(Item newItem, int count)
     {
@@ -25,6 +25,18 @@ public class InventorySlot : MonoBehaviour
         icon.enabled = true;
         removeButton.interactable = true;
         UpdateStackText();
+    }
+
+    public void MoveToHotbar()
+    {
+        if (item != null)
+        {
+            if (HotbarManager.Instance.AddToHotbar(item, quantity))
+            {
+                Inventory.instance.Remove(item, quantity);
+                ClearSlot();
+            }
+        }
     }
 
     public void ClearSlot()
