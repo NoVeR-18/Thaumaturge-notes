@@ -16,12 +16,12 @@ public class HotBarItem
 public class HotbarManager : MonoBehaviour
 {
     public int hotbarSize { private set; get; } = 5;
-    [SerializeField] private Transform handPosition; // Точка в руке для отображения предмета
+    [SerializeField] private Transform handPosition;
 
     public int SelectedSlotIndex { private set; get; } = 0;
-    private GameObject currentItemInHand; // Объект в руке
+    private GameObject currentItemInHand;
     [SerializeField]
-    private List<HotBarItem> hotbarItems = new List<HotBarItem>(); // Храним предметы
+    private List<HotBarItem> hotbarItems = new List<HotBarItem>();
 
     public delegate void OnHotbarUpdated();
     public event OnHotbarUpdated HotbarUpdated;
@@ -39,6 +39,7 @@ public class HotbarManager : MonoBehaviour
 
     private void Start()
     {
+        LoadHotbar();
         UpdateHandItem();
     }
 
@@ -78,7 +79,10 @@ public class HotbarManager : MonoBehaviour
         if (hotbarItems[SelectedSlotIndex] == null || hotbarItems[SelectedSlotIndex].item == null)
         {
             hotbarItems[SelectedSlotIndex] = new(item, count);
-            HotbarUpdated?.Invoke(); // Уведомляем UI
+            HotbarUpdated?.Invoke();
+
+            UpdateHandItem();
+            SaveHotbar();
             return true;
         }
         else
@@ -103,7 +107,7 @@ public class HotbarManager : MonoBehaviour
 
     private void UpdateSelection()
     {
-        HotbarUpdated?.Invoke(); // Сообщаем UI об изменении
+        HotbarUpdated?.Invoke();
         UpdateHandItem();
     }
 
@@ -117,8 +121,6 @@ public class HotbarManager : MonoBehaviour
             {
                 meshFilter.mesh = selectedItem.item.prefab.GetComponent<MeshFilter>().sharedMesh;
                 meshRender.materials = selectedItem.item.prefab.gameObject.GetComponent<MeshRenderer>().sharedMaterials;
-                //currentItemInHand = Instantiate(selectedItem.item.prefab, handPosition);
-                //RemoveUnnecessaryComponents(currentItemInHand);
             }
             else
             {
@@ -127,5 +129,39 @@ public class HotbarManager : MonoBehaviour
 
             }
     }
+    public void SaveHotbar()
+    {
+        string json = JsonUtility.ToJson(new HotbarData(hotbarItems));
+        PlayerPrefs.SetString("Hotbar", json);
+        PlayerPrefs.Save();
+    }
 
+    public void LoadHotbar()
+    {
+        if (PlayerPrefs.HasKey("Hotbar"))
+        {
+            string json = PlayerPrefs.GetString("Hotbar");
+            HotbarData data = JsonUtility.FromJson<HotbarData>(json);
+
+            hotbarItems = data.items;
+
+            HotbarUpdated?.Invoke();
+        }
+    }
+}
+[System.Serializable]
+public class HotbarData
+{
+    public List<HotBarItem> items = new();
+
+    public HotbarData(List<HotBarItem> hotbarItems)
+    {
+        foreach (var hotbarItem in hotbarItems)
+        {
+            if (hotbarItem != null && hotbarItem.item != null)
+                items.Add(new HotBarItem(hotbarItem.item, hotbarItem.quantity));
+            else
+                items.Add(null);
+        }
+    }
 }

@@ -34,6 +34,7 @@ public class HotbarWindow : MonoBehaviour
                 {
                     slots[i].AddItem(items[i].item, items[i].quantity);
                 }
+                else slots[i].ClearSlot();
             }
             else slots[i].ClearSlot();
             slots[i].SetSelected(i == hotbarManager.SelectedSlotIndex);

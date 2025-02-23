@@ -93,7 +93,9 @@ public class Inventory : MonoBehaviour
     }
     public void SaveInventory()
     {
-        PlayerPrefs.SetString("Inventory", JsonUtility.ToJson(items));
+        InventoryData data = new InventoryData(items);
+        string json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString("Inventory", json);
         PlayerPrefs.Save();
     }
 
@@ -101,7 +103,19 @@ public class Inventory : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("Inventory"))
         {
-            items = JsonUtility.FromJson<List<InventoryItem>>(PlayerPrefs.GetString("Inventory"));
+            string json = PlayerPrefs.GetString("Inventory");
+            InventoryData data = JsonUtility.FromJson<InventoryData>(json);
+            items = data.items ?? new List<InventoryItem>();
         }
+    }
+}
+[System.Serializable]
+public class InventoryData
+{
+    public List<InventoryItem> items;
+
+    public InventoryData(List<InventoryItem> inventoryItems)
+    {
+        items = inventoryItems;
     }
 }
