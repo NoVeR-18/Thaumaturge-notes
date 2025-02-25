@@ -29,8 +29,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7633212490065053415}
   - {fileID: 3225695084479226765}
+  - {fileID: 7633212490065053415}
   - {fileID: 1185150399617777479}
   - {fileID: 8958391020843599768}
   m_Father: {fileID: 0}
@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff79cd10c79bb7543a8ad8cce9981810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SlotID: 0
   icon: {fileID: 3205776750343093553}
   defaultIcon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   iconButton: {fileID: 5296776338204158203}

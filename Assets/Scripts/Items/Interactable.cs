@@ -9,13 +9,22 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
 
-    public float radius = 3f;
+    public float radius = 2f;
     public Transform interactionTransform;
 
     bool isFocus = false;   // Is this interactable currently being focused?
     Transform player;       // Reference to the player transform
 
     bool hasInteracted = false; // Have we already interacted with the object?
+
+    private void Start()
+    {
+        if (interactionTransform == null)
+        {
+            interactionTransform = transform;
+        }
+    }
+
     void Update()
     {
         // check if pkayer object is null
@@ -60,6 +69,10 @@ public class Interactable : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
+        if (interactionTransform == null)
+        {
+            interactionTransform = transform;
+        }
         Gizmos.DrawWireSphere(interactionTransform.position, radius);
     }
 

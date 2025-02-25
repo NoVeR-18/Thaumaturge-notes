@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06717919b4325e745a78feb993ac7a56, type: 3}
-  m_Name: Apple
+  m_Name: Bottle
   m_EditorClassIdentifier: 
-  itemName: Apple
-  icon: {fileID: 21300000, guid: 595df4139623e93498e02108674ff1f0, type: 3}
-  prefab: {fileID: 678383714736325481, guid: ec35167339615b645b64c2281448abe5, type: 3}
+  itemName: Bottle
+  icon: {fileID: 21300000, guid: 65a83d5ce2a3a6944916da9786db40e7, type: 3}
+  prefab: {fileID: 1918357589454920, guid: 9155a26ed8a2b04438c46f09e38c706a, type: 3}
   maxStack: 5
   healthGain: 0
-  hungerGain: 50
+  hungerGain: 0
   thirstyGain: 0

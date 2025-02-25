@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f5f6695325a994f82fe30979ef211c, type: 3}
+  m_Name: Baterry
+  m_EditorClassIdentifier: 
+  itemName: Baterry
+  icon: {fileID: 21300000, guid: 4fec1bff94edaef4ba8d7c621e8a8b74, type: 3}
+  prefab: {fileID: 1921305373378060, guid: df130d852b0dfe346bc9922ec52a7169, type: 3}
+  maxStack: 10

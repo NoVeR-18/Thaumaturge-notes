@@ -32,8 +32,6 @@ public class Inventory : MonoBehaviour
 
     public void Add(Item item, int amount = 1)
     {
-        if (!item.showInInventory) return;
-
         int remainingAmount = amount;
 
         // «аполн€ем уже существующие неполные стеки
