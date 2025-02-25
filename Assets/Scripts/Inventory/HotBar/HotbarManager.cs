@@ -7,6 +7,12 @@ public class HotBarItem
     public Item item;
     public int quantity;
 
+    public HotBarItem()
+    {
+        item = null;
+        quantity = 0;
+    }
+
     public HotBarItem(Item newItem, int amount)
     {
         item = newItem;
@@ -33,7 +39,7 @@ public class HotbarManager : MonoBehaviour
         Instance = this;
         for (int i = 0; i < hotbarSize; i++)
         {
-            hotbarItems.Add(null);
+            hotbarItems.Add(new HotBarItem());
         }
     }
 
@@ -46,6 +52,55 @@ public class HotbarManager : MonoBehaviour
     private void Update()
     {
         HandleScrollInput();
+        UseItem();
+
+
+    }
+
+    private void UseItem()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            var usedItem = hotbarItems[SelectedSlotIndex];
+            if (usedItem != null)
+            {
+                if (usedItem.item != null)
+                {
+                    hotbarItems[SelectedSlotIndex].item.Use();
+                    RemoveItemFromHotbar(hotbarItems[SelectedSlotIndex]);
+                }
+            }
+        }
+    }
+
+    public void RemoveItemFromHotbar(HotBarItem removedItem)
+    {
+        if (removedItem != null)
+        {
+            if (removedItem.quantity > 1)
+            {
+                hotbarItems.Find(x => x == removedItem).quantity--;
+            }
+            else
+            {
+                var item = hotbarItems.Find(x => x == removedItem);
+                item.item = null;
+                item.quantity = 0;
+            }
+            UpdateSelection();
+            SaveHotbar();
+        }
+    }
+
+    public void RemoveItemFromHotbar(int slotIndex)
+    {
+        if (hotbarItems[slotIndex] != null)
+            if (hotbarItems[slotIndex].item != null)
+            {
+                hotbarItems[slotIndex] = null;
+                UpdateSelection();
+                SaveHotbar();
+            }
     }
 
     private void HandleScrollInput()
@@ -63,6 +118,7 @@ public class HotbarManager : MonoBehaviour
             UpdateSelection();
         }
     }
+
 
     public bool AddToHotbar(Item item, int count)
     {
@@ -90,15 +146,6 @@ public class HotbarManager : MonoBehaviour
 
     }
 
-    public void RemoveFromHotbar(int slotIndex)
-    {
-        if (hotbarItems[slotIndex] != null)
-            if (hotbarItems[slotIndex].item != null)
-            {
-                hotbarItems[slotIndex] = null;
-                HotbarUpdated?.Invoke();
-            }
-    }
 
     public List<HotBarItem> GetItems()
     {
@@ -117,6 +164,8 @@ public class HotbarManager : MonoBehaviour
         var meshFilter = handPosition.GetComponent<MeshFilter>();
         var meshRender = handPosition.GetComponent<MeshRenderer>();
         if (selectedItem != null)
+        {
+
             if (selectedItem.item != null && selectedItem.item.prefab != null)
             {
                 meshFilter.mesh = selectedItem.item.prefab.GetComponent<MeshFilter>().sharedMesh;
@@ -126,8 +175,13 @@ public class HotbarManager : MonoBehaviour
             {
                 meshFilter.mesh = null;
                 meshRender.materials = new Material[0];
-
             }
+        }
+        else
+        {
+            meshFilter.mesh = null;
+            meshRender.materials = new Material[0];
+        }
     }
     public void SaveHotbar()
     {

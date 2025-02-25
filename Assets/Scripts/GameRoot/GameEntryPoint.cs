@@ -11,7 +11,7 @@ namespace Assets.Scripts.GameRoot
         private Coroutines _coroutines;
         //private UIRootView _uiRoot;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 
         public static void AutoStartGame()
         {

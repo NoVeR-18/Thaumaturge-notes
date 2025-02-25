@@ -20,7 +20,7 @@ public class HotbarSlot : MonoBehaviour
 
     private void Start()
     {
-        iconButton.onClick.AddListener(() => { RemoveFromHotbar(); HotbarManager.Instance.RemoveFromHotbar(SlotID); });
+        iconButton.onClick.AddListener(() => { RemoveFromHotbar(); HotbarManager.Instance.RemoveItemFromHotbar(SlotID); });
     }
 
     public void AddItem(Item newItem, int count = 1)

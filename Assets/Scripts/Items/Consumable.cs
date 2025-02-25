@@ -11,7 +11,7 @@ public class Consumable : Item
 
     public override void Use()
     {
-
+        base.Use();
     }
 
 }
