@@ -8,10 +8,27 @@ public class InventoryItem
     public Item item;
     public int quantity;
 
+    public InventoryItem()
+    {
+        item = null;
+        quantity = 0;
+    }
+
     public InventoryItem(Item newItem, int amount)
     {
         item = newItem;
         quantity = amount;
+    }
+
+    public bool IsEmpty()
+    {
+        return item == null || quantity <= 0;
+    }
+
+    public void Clear()
+    {
+        item = null;
+        quantity = 0;
     }
 }
 
@@ -27,14 +44,24 @@ public class Inventory : MonoBehaviour
     void Awake()
     {
         instance = this;
+        InitializeInventory();
         LoadInventory();
+    }
+
+    private void InitializeInventory()
+    {
+        items = new List<InventoryItem>();
+        for (int i = 0; i < space; i++)
+        {
+            items.Add(new InventoryItem()); // Заполняем пустыми слотами
+        }
     }
 
     public void Add(Item item, int amount = 1)
     {
         int remainingAmount = amount;
 
-        // Заполняем уже существующие неполные стеки
+        // Заполняем существующие слоты
         foreach (var inventoryItem in items)
         {
             if (inventoryItem.item == item && inventoryItem.quantity < item.maxStack)
@@ -44,51 +71,85 @@ public class Inventory : MonoBehaviour
                 remainingAmount -= addable;
 
                 if (remainingAmount <= 0)
-                    break;
+                {
+                    InventoryUpdated?.Invoke();
+                    return;
+                }
             }
         }
 
-        // Если ещё остались предметы и есть место, создаём новые стеки
-        while (remainingAmount > 0 && items.Count < space)
+        // Записываем в пустые слоты
+        foreach (var inventoryItem in items)
         {
-            int stackSize = Mathf.Min(remainingAmount, item.maxStack);
-            items.Add(new InventoryItem(item, stackSize));
-            remainingAmount -= stackSize;
+            if (inventoryItem.IsEmpty())
+            {
+                int stackSize = Mathf.Min(remainingAmount, item.maxStack);
+                inventoryItem.item = item;
+                inventoryItem.quantity = stackSize;
+                remainingAmount -= stackSize;
+
+                if (remainingAmount <= 0)
+                {
+                    InventoryUpdated?.Invoke();
+                    return;
+                }
+            }
         }
 
         if (remainingAmount > 0)
         {
             Debug.Log("Инвентарь переполнен!");
         }
+
         InventoryUpdated?.Invoke();
         SaveInventory();
     }
 
     public void Remove(Item item, int amount = 1)
     {
-        InventoryItem existingItem = items.Find(i => i.item == item);
-        if (existingItem != null)
+        foreach (var inventoryItem in items)
         {
-            existingItem.quantity -= amount;
-            if (existingItem.quantity <= 0)
-                items.Remove(existingItem);
+            if (inventoryItem.item == item)
+            {
+                inventoryItem.quantity -= amount;
+                if (inventoryItem.quantity <= 0)
+                {
+                    inventoryItem.Clear();
+                }
+                break;
+            }
         }
+
+        InventoryUpdated?.Invoke();
         SaveInventory();
     }
 
     public void DropItem(Item item)
     {
-        InventoryItem existingItem = items.Find(i => i.item == item);
-        if (existingItem != null)
+        foreach (var inventoryItem in items)
         {
-            GameObject droppedItem = Instantiate(item.prefab, dropPosition.position, Quaternion.identity);
-            Remove(item);
+            if (inventoryItem.item == item)
+            {
+                GameObject droppedItem = Instantiate(item.prefab, dropPosition.position, Quaternion.identity);
+                Remove(item);
+                break;
+            }
         }
     }
-    public int GetItemCount(InventoryItem item)
+
+    public int GetItemCount(Item item)
     {
-        return item.quantity;
+        int count = 0;
+        foreach (var inventoryItem in items)
+        {
+            if (inventoryItem.item == item)
+            {
+                count += inventoryItem.quantity;
+            }
+        }
+        return count;
     }
+
     public void SaveInventory()
     {
         InventoryData data = new InventoryData(items);
@@ -104,9 +165,16 @@ public class Inventory : MonoBehaviour
             string json = PlayerPrefs.GetString("Inventory");
             InventoryData data = JsonUtility.FromJson<InventoryData>(json);
             items = data.items ?? new List<InventoryItem>();
+
+            // Если загруженный инвентарь меньше нужного размера, дополняем пустыми слотами
+            while (items.Count < space)
+            {
+                items.Add(new InventoryItem());
+            }
         }
     }
 }
+
 [System.Serializable]
 public class InventoryData
 {

@@ -25,9 +25,7 @@ public class HotbarManager : MonoBehaviour
     [SerializeField] private Transform handPosition;
 
     public int SelectedSlotIndex { private set; get; } = 0;
-    private GameObject currentItemInHand;
-    [SerializeField]
-    private List<HotBarItem> hotbarItems = new List<HotBarItem>();
+    public List<HotBarItem> hotbarItems = new List<HotBarItem>();
 
     public delegate void OnHotbarUpdated();
     public event OnHotbarUpdated HotbarUpdated;
@@ -59,18 +57,13 @@ public class HotbarManager : MonoBehaviour
 
     private void UseItem()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (!WindowsManager.windowOpened)
         {
-            var usedItem = hotbarItems[SelectedSlotIndex];
-            if (usedItem != null)
-            {
-                if (usedItem.item != null)
-                {
+            if (hotbarItems[SelectedSlotIndex] != null)
+                if (hotbarItems[SelectedSlotIndex].item != null)
                     hotbarItems[SelectedSlotIndex].item.Use();
-                    RemoveItemFromHotbar(hotbarItems[SelectedSlotIndex]);
-                }
-            }
         }
+
     }
 
     public void RemoveItemFromHotbar(HotBarItem removedItem)

@@ -4,11 +4,14 @@ using UnityEngine;
 public class WindowsManager : MonoBehaviour
 {
     public static WindowsManager instance;
-
+    public static bool windowOpened;
     [SerializeField] private InventoryWindow _inventoryPopup;
     [SerializeField] private QuestWindow _questsWindow;
     [SerializeField] private ThaumaturgiconWindow _thaumaturgiconWindow;
-
+    private void Start()
+    {
+        windowOpened = false;
+    }
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))

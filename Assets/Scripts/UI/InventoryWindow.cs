@@ -45,7 +45,7 @@ public class InventoryWindow : WindowBase
         {
             if (items.Count > i)
             {
-                slots[i].AddItem(items[i].item, Inventory.instance.GetItemCount(items[i]));
+                slots[i].AddItem(items[i]);
             }
             else
             {

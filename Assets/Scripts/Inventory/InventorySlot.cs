@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class InventorySlot : MonoBehaviour
 {
     public Image icon;
+    public Sprite defaultIcon;
     public Button removeButton;
     public Button iconButton;
     public TextMeshProUGUI stackText;
@@ -22,9 +23,30 @@ public class InventorySlot : MonoBehaviour
         quantity = count;
 
         icon.sprite = item.icon;
-        icon.enabled = true;
         removeButton.interactable = true;
         UpdateStackText();
+    }
+    public void AddItem(InventoryItem newItem)
+    {
+        if (newItem != null)
+        {
+            if (newItem.item != null)
+            {
+                item = newItem.item;
+                quantity = newItem.quantity;
+                icon.sprite = item.icon;
+                removeButton.interactable = true;
+                UpdateStackText();
+            }
+            else
+            {
+                ClearSlot();
+            }
+        }
+        else
+        {
+            ClearSlot();
+        }
     }
 
     public void MoveToHotbar()
@@ -44,10 +66,10 @@ public class InventorySlot : MonoBehaviour
         item = null;
         quantity = 0;
 
-        icon.sprite = null;
-        icon.enabled = false;
+        icon.sprite = defaultIcon;
         removeButton.interactable = false;
-        stackText.text = "";
+
+        UpdateStackText();
     }
 
     public void RemoveItemFromInventory()

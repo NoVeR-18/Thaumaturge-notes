@@ -8,10 +8,12 @@ namespace Assets.Scripts.UI
         {
             var parrent = GetComponent<Transform>();
             parrent.gameObject.SetActive(false);
+            WindowsManager.windowOpened = false;
         }
         virtual public void OpenTab()
         {
             var parrent = GetComponent<Transform>();
+            WindowsManager.windowOpened = true;
             parrent.gameObject.SetActive(true);
         }
     }

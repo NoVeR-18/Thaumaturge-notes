@@ -10,6 +10,16 @@ public class Item : ScriptableObject
 
     public virtual void Use()
     {
-        Debug.Log("Использован предмет: " + itemName);
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            var usedItem = HotbarManager.Instance.hotbarItems[HotbarManager.Instance.SelectedSlotIndex];
+            if (usedItem != null)
+            {
+                if (usedItem.item != null)
+                {
+                    HotbarManager.Instance.RemoveItemFromHotbar(HotbarManager.Instance.hotbarItems[HotbarManager.Instance.SelectedSlotIndex]);
+                }
+            }
+        }
     }
 }
