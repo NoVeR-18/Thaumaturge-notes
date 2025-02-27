@@ -20,7 +20,7 @@ public class HotbarSlot : MonoBehaviour
 
     private void Start()
     {
-        iconButton.onClick.AddListener(() => { RemoveFromHotbar(); HotbarManager.Instance.RemoveItemFromHotbar(SlotID); });
+        iconButton.onClick.AddListener(() => {/* RemoveFromHotbar();*/ HotbarManager.Instance.OnSlotClicked(SlotID); });
     }
 
     public void AddItem(Item newItem, int count = 1)
@@ -50,7 +50,7 @@ public class HotbarSlot : MonoBehaviour
     {
         if (item != null)
         {
-            Inventory.instance.Add(item, quantity); // Возвращаем предмет в инвентарь
+            Inventory.Instance.Add(item, quantity); // Возвращаем предмет в инвентарь
             ClearSlot();
         }
     }
