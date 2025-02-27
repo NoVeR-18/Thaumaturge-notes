@@ -5,9 +5,21 @@ public class WindowsManager : MonoBehaviour
 {
     public static WindowsManager instance;
     public static bool windowOpened;
-    [SerializeField] private InventoryWindow _inventoryPopup;
-    [SerializeField] private QuestWindow _questsWindow;
-    [SerializeField] private ThaumaturgiconWindow _thaumaturgiconWindow;
+    public InventoryWindow _inventoryPopup;
+    public QuestWindow _questsWindow;
+    public ThaumaturgiconWindow _thaumaturgiconWindow;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+            Destroy(this);
+
+    }
+
     private void Start()
     {
         windowOpened = false;

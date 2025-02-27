@@ -4,18 +4,20 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
+    [HideInInspector]
+    public int SlotID = 0;
     public Image icon;
     public Sprite defaultIcon;
     public Button removeButton;
     public Button iconButton;
     public TextMeshProUGUI stackText;
 
-    private Item item;
-    private int quantity;
+    public Item item;
+    public int quantity;
     private void Start()
     {
         removeButton.onClick.AddListener(() => { RemoveItemFromInventory(); });
-        iconButton.onClick.AddListener(MoveToHotbar);
+        iconButton.onClick.AddListener(() => { Inventory.Instance.OnSlotClicked(SlotID); });
     }
     public void AddItem(Item newItem, int count)
     {
@@ -55,7 +57,7 @@ public class InventorySlot : MonoBehaviour
         {
             if (HotbarManager.Instance.AddToHotbar(item, quantity))
             {
-                Inventory.instance.Remove(item, quantity);
+                Inventory.Instance.Remove(item, quantity);
                 ClearSlot();
             }
         }
@@ -77,12 +79,12 @@ public class InventorySlot : MonoBehaviour
         if (item != null && quantity > 1)
         {
             quantity--;
-            Inventory.instance.DropItem(item);
+            Inventory.Instance.DropItem(item);
             UpdateStackText();
         }
         else
         {
-            Inventory.instance.DropItem(item);
+            Inventory.Instance.DropItem(item);
             ClearSlot();
         }
     }

@@ -51,8 +51,6 @@ public class HotbarManager : MonoBehaviour
     {
         HandleScrollInput();
         UseItem();
-
-
     }
 
     private void UseItem()
@@ -63,7 +61,6 @@ public class HotbarManager : MonoBehaviour
                 if (hotbarItems[SelectedSlotIndex].item != null)
                     hotbarItems[SelectedSlotIndex].item.Use();
         }
-
     }
 
     public void RemoveItemFromHotbar(HotBarItem removedItem)
@@ -136,7 +133,6 @@ public class HotbarManager : MonoBehaviour
         }
         else
             return false;
-
     }
 
 
@@ -195,6 +191,80 @@ public class HotbarManager : MonoBehaviour
             HotbarUpdated?.Invoke();
         }
     }
+
+
+    // Метод обработки клика по слоту инвентаря или хот-бара
+    public void OnSlotClicked(int slotIndex)
+    {
+        var selectedItem = Inventory.Instance.SelectedItem;
+
+        if (selectedItem.item == null) // Если ничего не выбрано
+        {
+            if (hotbarItems[slotIndex].item != null) // Если в слоте есть предмет
+            {
+                selectedItem = new InventoryItem(hotbarItems[slotIndex].item, hotbarItems[slotIndex].quantity);
+
+                hotbarItems[slotIndex] = new HotBarItem();
+                Inventory.Instance.SetSelectedItem(selectedItem);
+                HotbarUpdated?.Invoke();
+            }
+        }
+        else // Если предмет уже выбран, перемещаем его
+        {
+            SwapOrMergeItems(slotIndex);
+            Inventory.Instance.ClearSelectedItem();
+        }
+    }
+
+    // Метод для перемещения или объединения предметов
+    private void SwapOrMergeItems(int targetSlotIndex)
+    {
+        var selectedItem = Inventory.Instance.SelectedItem;
+
+
+        //List<ItemSlot> sourceInventory = selectedSlotIndex < hotbarSlots.Count ? hotbarSlots : inventorySlots;
+        //List<InventoryItem> targetInventory = Inventory.instance.items;
+
+        //ItemSlot sourceSlot = sourceInventory[selectedSlotIndex];
+        var targetSlot = hotbarItems[targetSlotIndex];
+
+        if (targetSlot.item == null) // Если целевой слот пустой
+        {
+            targetSlot = new HotBarItem(selectedItem.item, selectedItem.quantity);
+            hotbarItems[targetSlotIndex] = targetSlot;
+            Inventory.Instance.ClearSelectedItem();
+        }
+        else if (targetSlot.item == selectedItem.item) // Если предметы одинаковые
+        {
+            int spaceLeft = targetSlot.item.maxStack - targetSlot.quantity;
+            if (spaceLeft > 0)
+            {
+                int transferAmount = Mathf.Min(targetSlot.quantity, spaceLeft);
+                targetSlot.quantity += transferAmount;
+                selectedItem.quantity -= transferAmount;
+
+                if (selectedItem.quantity <= 0) // Если предмет закончился
+                {
+                    Inventory.Instance.ClearSelectedItem();
+                }
+            }
+        }
+        else // Если предметы разные, меняем их местами
+        {
+            Item tempItem = targetSlot.item;
+            int tempCount = targetSlot.quantity;
+
+            targetSlot.item = selectedItem.item;
+            targetSlot.quantity = selectedItem.quantity;
+            hotbarItems[targetSlotIndex] = targetSlot;
+
+            selectedItem.item = tempItem;
+            selectedItem.quantity = tempCount;
+            Inventory.Instance.SetSelectedItem(selectedItem);
+        }
+        HotbarUpdated?.Invoke();
+    }
+
 }
 [System.Serializable]
 public class HotbarData
